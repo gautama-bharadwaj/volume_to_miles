@@ -1,36 +1,62 @@
-from distutils.command.config import config
 import json
 import math
 
-f = open('config.json')
-config_data = json.load(f)
+def calculate_distance(proj_distance, proj_intersections, proj_volume):
+    # -----------------------------------------------------------
+    # function to estimate distance walked in a project
+    #
+    # Parameters:
+    # -----------
+    # proj_distance: Total path length of the project
+    # proj_intersections: Total number of intersections within the project boundaries
+    # proj_volume: Total intersection volume within the project boundaries
+    #
+    # Returns:
+    # -----------
+    # distance: Total distance walked within the project for the given intersection volume
+    # -----------------------------------------------------------
 
-block_distribution = config_data['blocks_walked'];
+    # Get data from the lookup table in config.json
+    f = open('config.json')
+    config_data = json.load(f)
+    miles_distribution = config_data['miles_walked'];
 
-proj_intersections = 10
-proj_volume = 10000
+    # Calculating the average distance per intersection for the project
+    proj_distance_per_intersection = proj_distance/proj_intersections
 
-if (len(block_distribution.keys()) > proj_intersections):
-    block_distribution[str(proj_intersections)] = sum(
-        list(block_distribution.values())[proj_intersections-1:])
+    # Convert miles into intersections
+    intersection_distribution = {}
+    distribution_den = 0
+    for dist in miles_distribution:
+        intersection_distribution[dist] = math.floor(float(dist)/proj_distance_per_intersection)
 
-for i in range(proj_intersections+1, int(list(block_distribution.keys())[-1])+1):
-    del block_distribution[str(i)]
+        # If on average people walk more than the number of intersections in the project, then consider they have walked through all of the project intersections
+        if intersection_distribution[dist] > proj_intersections:
+            intersection_distribution[dist] = proj_intersections
 
-print(block_distribution)
-temp = 0
-for i in range(1, proj_intersections+1):
-    if (int(list(block_distribution.keys())[-1]) < i):
-        break
-    temp += (block_distribution[str(i)]/100)*(i)
+        # Distribution of people walking through intersections
+        distribution_den += intersection_distribution[dist]*miles_distribution[dist]
 
-people = math.floor(proj_volume/temp)
-print("Unique people: " + str(people))
+    people = math.floor(proj_volume/distribution_den)
 
-distance = 0
-for i in range(1, proj_intersections+1):
-    if (int(list(block_distribution.keys())[-1]) < i):
-        break
-    distance += people*(block_distribution[str(i)]/100)*(i*(1/9))
+    # Calculating the distance walked in the project
+    distance = 0
+    for dist in miles_distribution:
+        if (float(dist)>proj_distance):
+            distance += proj_distance*miles_distribution[dist]*people
+        else:
+            distance += float(dist)*miles_distribution[dist]*people
 
-print("Total distance travelled: " + str(round(distance)) + " miles")
+    distance = round(distance, 2)
+
+    return distance
+
+if __name__ == "__main__":
+    # Project data
+    proj_intersections = 10
+    proj_distance = 1.8
+    proj_volume = 1234
+
+    # Pass the data to the function calculate_distance()
+    distance = calculate_distance(proj_distance, proj_intersections, proj_volume)
+    print("The total distance travelled is: "+ str(distance)+ " miles")
