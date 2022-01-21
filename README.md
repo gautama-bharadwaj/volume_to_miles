@@ -37,6 +37,14 @@ Python function to calculate distance walked in a project
     <li> Total intersection volume within the project boundaries (proj_volume) </li>
   </ol>
   
+  The function can be called by:
+  ```bash
+  calculate_distance(proj_distance, proj_intersections, proj_volume)
+  ```
+  
+  It returns a ```float```, the total distance walked within the project for the given intersection volume 
+
+  
 ## Working
 
   - Initially, using the project data, the average distance between intersections for the project is calculated. 
