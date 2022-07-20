@@ -51,4 +51,27 @@ Python function to calculate distance walked in a project
   - Using this, the miles travelled by the fraction of people is converted into the number of intersections travelled by the fraction of people. 
   - Using this, the unique number of people in the project for a given volume is calculated. 
   - Once the unique number of people is calculated, using the look-up table above, the total distance travelled by the people in the project is calculated.
+
+## Explanation
+
+1. Calculate the average distance per intersection by dividing total project distance by total number of project intersections.
+2. Using the lookup table, and the average distance per intersection from step 1,
+find the distribution of percentage of people walking through the number of intersections. (Essentially it's adding another column to the lookup table)
+
+| distance (miles)	| percentage of people (fraction) |
+| ----- | ----- |
+| .. | .. |
+
+to 
+
+<div class="heatMap">
+
+| distance (miles) | #intersections | percentage of people (fraction) |
+| ----- | ----- | ----- |
+| .. | .. | .. |
+</div>
+
+3. Calculate the total number of intersections people would have travelled according to the updated lookup table. For all rows in the lookup table, iteratively multiply the #intersections with percentage of people (fraction) and sum it up. 
+4. Calculate the number of unique people by dividing the total number of intersections travelled by people by total volume.
+5. Use the lookup table to multiply the fraction of people with miles travelled by each fraction with the total number of people to get the total distance travelled in the project.
   
