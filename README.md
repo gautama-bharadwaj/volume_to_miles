@@ -72,6 +72,6 @@ to
 </div>
 
 3. Calculate the total number of intersections people would have travelled according to the updated lookup table. For all rows in the lookup table, iteratively multiply the #intersections with percentage of people (fraction) and sum it up. 
-4. Calculate the number of unique people by dividing the total number of intersections travelled by people by total volume.
+4. Calculate the number of unique people by dividing the total project volume by the total number of intersections travelled (from Step 3).
 5. Use the lookup table to multiply the fraction of people with miles travelled by each fraction with the total number of people to get the total distance travelled in the project.
   
